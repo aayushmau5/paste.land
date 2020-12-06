@@ -1,6 +1,5 @@
 import { Application, Router, Status } from "https://deno.land/x/oak/mod.ts";
-
-let count = 0;
+import { passwordGenerator } from "https://deno.land/x/password_generator/mod.ts";
 
 interface Paste {
   content: string;
@@ -24,12 +23,12 @@ route.post("/", async (ctx) => {
   const paste = await body.value;
   console.log(paste);
   if (paste) {
-    count++;
-    pastes.set(String(count), {
+    const id: String = passwordGenerator("Aa0", 10);
+    pastes.set(String(id), {
       content: paste as string,
     });
     ctx.response.status = Status.OK;
-    ctx.response.body = `Stored succesfully at http://localhost:8000/${count} `;
+    ctx.response.body = `Stored succesfully at http://localhost:8000/${id} `;
     return;
   }
   ctx.throw(Status.BadRequest, "Bad Request");
